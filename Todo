@@ -12,7 +12,17 @@ Chap 1: LocalTransport
 Chap 2: Server 
 nhieu LocalTransport giao tiep voi nhau. 
 
+RemoteTransport -> SendTx -> Server 
+LocalTransport // validator -> 5s -> validator gom cac Tx tao Block 
 
+Chap 3: Transaction, mempool, block,...
+
+Block, Header
+Enc, dec Header, Block
+
+Chap 4
+test chap 3
+Tx, enc, dec tx
 
 
 

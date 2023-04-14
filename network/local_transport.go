@@ -27,17 +27,17 @@ func (tr *LocalTransport) Consume() <-chan RPC {
 	return tr.consumeCh
 }
 
-func (tr *LocalTransport) Connect(trb *LocalTransport) error {
+func (tr *LocalTransport) Connect(trb Transport) error {
 	tr.lock.Lock()
 	defer tr.lock.Unlock()
 
-	tr.peers[trb.Addr()] = trb
+	tr.peers[trb.Addr()] = trb.(*LocalTransport)
 	return nil
 }
 
 func (tr *LocalTransport) SendMessage(to NetAddr, payload []byte) error {
 	if tr.addr == to {
-		return fmt.Errorf("could not send message to yourself!!!")
+		return fmt.Errorf("could not send message to yourself")
 	}
 
 	peer, ok := tr.peers[to]
