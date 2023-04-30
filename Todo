@@ -22,8 +22,19 @@ Enc, dec Header, Block
 
 Chap 4
 test chap 3
-Tx, enc, dec tx
 
+Chap5 
+keypair ecdsa 
+ecdsa.P256() 
+private key -> public key -> address
+ecdsa 
+publicKey hash-> address
+Chap6 
+signature -> signature + data -> r,s
+r,s 
+chap7 
+Signature + Tx -> Tx_Signed 
+mempool 
 
 
 

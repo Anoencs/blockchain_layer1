@@ -1,9 +1,11 @@
 package core
 
-import "io"
+import (
+	"github.com/Anoencs/blockchain_layer1/crypto"
+)
 
 type Transaction struct {
+	Data      []byte
+	PublicKey crypto.PublicKey
+	Signature *crypto.Signature
 }
-
-func (tx *Transaction) EncodeBinary(w io.Writer) error { return nil }
-func (tx *Transaction) DecodeBinary(r io.Reader) error { return nil }

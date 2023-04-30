@@ -3,5 +3,5 @@ build:
 run: build
 	./bin/blockchain_layer1
 test:
-	go test ./...
+	go test -v ./...
 	
