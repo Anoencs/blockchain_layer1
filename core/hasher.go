@@ -1,9 +1,7 @@
 package core
 
 import (
-	"bytes"
 	"crypto/sha256"
-	"encoding/gob"
 
 	types "github.com/Anoencs/blockchain_layer1/type"
 )
@@ -14,12 +12,7 @@ type Hasher[T any] interface {
 
 type BlockHasher struct{}
 
-func (BlockHasher) Hash(b *Block) types.Hash {
-	buf := &bytes.Buffer{}
-	enc := gob.NewEncoder(buf)
-	if err := enc.Encode(b.Header); err != nil {
-		panic(err)
-	}
-	h := sha256.Sum256(buf.Bytes())
+func (BlockHasher) Hash(b *Header) types.Hash {
+	h := sha256.Sum256(b.Bytes())
 	return types.Hash(h)
 }

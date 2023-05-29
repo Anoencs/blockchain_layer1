@@ -32,9 +32,38 @@ publicKey hash-> address
 Chap6 
 signature -> signature + data -> r,s
 r,s 
-chap7 
-Signature + Tx -> Tx_Signed 
-mempool 
+Chap 7
+
+Block, signature, publickey
+
+Chap 8 
+
+Sign,Verify -> Tx, Block 
+
+Chap 9
+
+Blockchain structure
+
+Chap10 
+
+Memory
+ValidateBlock
+AddBlock
+Validate - > addblockwithoutValidate
+
+
+Chap 11
+
+Update Validator
+
+1. Check Block too High 
+2. Check PrevHash == hash of prevhash
+
+Chap 12
+
+
+
+
 
 
 

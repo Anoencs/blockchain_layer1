@@ -1,7 +1,7 @@
 build: 
-	go build -o bin/blockchain_layer1
+	@ go build -o bin/blockchain_layer1
 run: build
-	./bin/blockchain_layer1
+	@ ./bin/blockchain_layer1
 test:
-	go test -v ./...
+	@ go test ./...
 	
