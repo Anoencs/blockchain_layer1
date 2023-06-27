@@ -6,10 +6,6 @@ import (
 	"io"
 )
 
-func init() {
-	gob.Register(elliptic.P256())
-}
-
 type Encoder[T any] interface {
 	Encode(T) error
 }
@@ -23,6 +19,7 @@ type GobTxEncoder struct {
 }
 
 func NewGobTxEncoder(w io.Writer) *GobTxEncoder {
+	gob.Register(elliptic.P256())
 	return &GobTxEncoder{
 		w: w,
 	}
@@ -37,6 +34,7 @@ type GobTxDecoder struct {
 }
 
 func NewGobTxDecoder(r io.Reader) *GobTxDecoder {
+	gob.Register(elliptic.P256())
 	return &GobTxDecoder{
 		r: r,
 	}

@@ -1,8 +1,8 @@
 build:
-	go build -o ./bin/projectx
+	go build -o ./bin/blockchain_layer1
 
 run: build
-	sudo ./bin/projectx
+	./bin/blockchain_layer1
 
 test:
 	go test ./...

@@ -3,7 +3,7 @@ package core
 import (
 	"crypto/sha256"
 
-	"github.com/anoencs/projectx/types"
+	"github.com/Anoencs/blockchain_layer1/types"
 )
 
 type Hasher[T any] interface {

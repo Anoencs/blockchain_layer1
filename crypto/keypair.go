@@ -7,7 +7,7 @@ import (
 	"crypto/sha256"
 	"math/big"
 
-	"github.com/anoencs/projectx/types"
+	"github.com/Anoencs/blockchain_layer1/types"
 )
 
 type PrivateKey struct {

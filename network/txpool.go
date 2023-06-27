@@ -3,8 +3,8 @@ package network
 import (
 	"sort"
 
-	"github.com/anoencs/projectx/core"
-	"github.com/anoencs/projectx/types"
+	"github.com/Anoencs/blockchain_layer1/core"
+	"github.com/Anoencs/blockchain_layer1/types"
 )
 
 type TxMapSorter struct {
@@ -50,8 +50,6 @@ func (p *TxPool) Transactions() []*core.Transaction {
 	return s.transactions
 }
 
-// Add adds an transaction to the pool, the caller is responsible checking if the
-// tx already exist.
 func (p *TxPool) Add(tx *core.Transaction) error {
 	hash := tx.Hash(core.TxHasher{})
 	p.transactions[hash] = tx

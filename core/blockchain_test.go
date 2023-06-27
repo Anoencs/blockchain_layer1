@@ -3,7 +3,7 @@ package core
 import (
 	"testing"
 
-	"github.com/anoencs/projectx/types"
+	"github.com/Anoencs/blockchain_layer1/types"
 	"github.com/stretchr/testify/assert"
 )
 

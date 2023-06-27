@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/anoencs/projectx/core"
+	"github.com/Anoencs/blockchain_layer1/core"
 	"github.com/sirupsen/logrus"
 )
 

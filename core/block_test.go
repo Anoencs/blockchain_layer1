@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/anoencs/projectx/crypto"
-	"github.com/anoencs/projectx/types"
+	"github.com/Anoencs/blockchain_layer1/crypto"
+	"github.com/Anoencs/blockchain_layer1/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -42,7 +42,7 @@ func randomBlock(t *testing.T, height uint32, prevBlockHash types.Hash) *Block {
 		Timestamp:     time.Now().UnixNano(),
 	}
 
-	b, err := NewBlock(header, []Transaction{tx})
+	b, err := NewBlock(header, []*Transaction{tx})
 	assert.Nil(t, err)
 	dataHash, err := CalculateDataHash(b.Transactions)
 	assert.Nil(t, err)

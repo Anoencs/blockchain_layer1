@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/anoencs/projectx/core"
-	"github.com/anoencs/projectx/crypto"
-	"github.com/anoencs/projectx/types"
+	"github.com/Anoencs/blockchain_layer1/core"
+	"github.com/Anoencs/blockchain_layer1/crypto"
+	"github.com/Anoencs/blockchain_layer1/types"
 	"github.com/go-kit/log"
 )
 
@@ -44,7 +44,7 @@ func NewServer(opts ServerOpts) (*Server, error) {
 		opts.Logger = log.With(opts.Logger, "ID", opts.ID)
 	}
 
-	chain, err := core.NewBlockchain(genesisBlock())
+	chain, err := core.NewBlockchain(opts.Logger, genesisBlock())
 	if err != nil {
 		return nil, err
 	}
@@ -57,6 +57,8 @@ func NewServer(opts ServerOpts) (*Server, error) {
 		quitCh:      make(chan struct{}, 1),
 	}
 
+	// If we dont got any processor from the server options, we going to use
+	// the server as default.
 	if s.RPCProcessor == nil {
 		s.RPCProcessor = s
 	}
@@ -145,6 +147,10 @@ func (s *Server) processTransaction(tx *core.Transaction) error {
 	return s.memPool.Add(tx)
 }
 
+func (s *Server) broadcastBlock(b *core.Block) error {
+	return nil
+}
+
 func (s *Server) broadcastTx(tx *core.Transaction) error {
 	buf := &bytes.Buffer{}
 	if err := tx.Encode(core.NewGobTxEncoder(buf)); err != nil {
@@ -167,13 +173,14 @@ func (s *Server) initTransports() {
 }
 
 func (s *Server) createNewBlock() error {
-	//block n+1 containt hash of block n
 	currentHeader, err := s.chain.GetHeader(s.chain.Height())
 	if err != nil {
 		return err
 	}
 
-	block, err := core.NewBlockFromPrevHeader(currentHeader, nil)
+	txx := s.memPool.Transactions()
+
+	block, err := core.NewBlockFromPrevHeader(currentHeader, txx)
 	if err != nil {
 		return err
 	}
@@ -186,6 +193,8 @@ func (s *Server) createNewBlock() error {
 		return err
 	}
 
+	s.memPool.Flush()
+
 	return nil
 }
 
@@ -194,7 +203,7 @@ func genesisBlock() *core.Block {
 		Version:   1,
 		DataHash:  types.Hash{},
 		Height:    0,
-		Timestamp: time.Now().UnixNano(),
+		Timestamp: 000000,
 	}
 
 	b, _ := core.NewBlock(header, nil)

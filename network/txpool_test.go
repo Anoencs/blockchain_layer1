@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/anoencs/projectx/core"
+	"github.com/Anoencs/blockchain_layer1/core"
 	"github.com/stretchr/testify/assert"
 )
 

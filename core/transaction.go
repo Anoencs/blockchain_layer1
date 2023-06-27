@@ -3,8 +3,8 @@ package core
 import (
 	"fmt"
 
-	"github.com/anoencs/projectx/crypto"
-	"github.com/anoencs/projectx/types"
+	"github.com/Anoencs/blockchain_layer1/crypto"
+	"github.com/Anoencs/blockchain_layer1/types"
 )
 
 type Transaction struct {
