@@ -1,14 +1,15 @@
 package core
 
 import (
+	"bytes"
 	"testing"
 
-	"github.com/Anoencs/blockchain_layer1/crypto"
+	"github.com/anoencs/projectx/crypto"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSignTransaction(t *testing.T) {
-	privKey := crypto.GeneratePrivatKey()
+	privKey := crypto.GeneratePrivateKey()
 	tx := &Transaction{
 		Data: []byte("foo"),
 	}
@@ -18,7 +19,7 @@ func TestSignTransaction(t *testing.T) {
 }
 
 func TestVerifyTransaction(t *testing.T) {
-	privKey := crypto.GeneratePrivatKey()
+	privKey := crypto.GeneratePrivateKey()
 	tx := &Transaction{
 		Data: []byte("foo"),
 	}
@@ -26,17 +27,28 @@ func TestVerifyTransaction(t *testing.T) {
 	assert.Nil(t, tx.Sign(privKey))
 	assert.Nil(t, tx.Verify())
 
-	otherPrivKey := crypto.GeneratePrivatKey()
-	tx.PublicKey = otherPrivKey.PublicKey()
+	otherPrivKey := crypto.GeneratePrivateKey()
+	tx.From = otherPrivKey.PublicKey()
 
 	assert.NotNil(t, tx.Verify())
 }
 
-func randomTxWithSignature(t *testing.T) *Transaction {
-	privKey := crypto.GeneratePrivatKey()
-	tx := &Transaction{
-		Data: []byte("test"),
+func TestTxEncodeDecode(t *testing.T) {
+	tx := randomTxWithSignature(t)
+	buf := &bytes.Buffer{}
+	assert.Nil(t, tx.Encode(NewGobTxEncoder(buf)))
+
+	txDecoded := new(Transaction)
+	assert.Nil(t, txDecoded.Decode(NewGobTxDecoder(buf)))
+	assert.Equal(t, &tx, txDecoded)
+}
+
+func randomTxWithSignature(t *testing.T) Transaction {
+	privKey := crypto.GeneratePrivateKey()
+	tx := Transaction{
+		Data: []byte("foo"),
 	}
 	assert.Nil(t, tx.Sign(privKey))
+
 	return tx
 }

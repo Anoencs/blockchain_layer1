@@ -22,7 +22,7 @@ func (v *BlockValidator) ValidateBlock(b *Block) error {
 	}
 
 	if b.Height != v.bc.Height()+1 {
-		return fmt.Errorf("block (%s) too hight", b.Hash(BlockHasher{}))
+		return fmt.Errorf("block (%s) too high", b.Hash(BlockHasher{}))
 	}
 
 	prevHeader, err := v.bc.GetHeader(b.Height - 1)
@@ -31,9 +31,12 @@ func (v *BlockValidator) ValidateBlock(b *Block) error {
 	}
 
 	hash := BlockHasher{}.Hash(prevHeader)
-	fmt.Printf("hash: %s\nprevHash: %s\n", hash, b.PrevBlockHash)
 	if hash != b.PrevBlockHash {
-		return fmt.Errorf("the hash of previous block (%s) is invalid", b.PrevBlockHash)
+		return fmt.Errorf("the hash of the previous block (%s) is invalid", b.PrevBlockHash)
+	}
+
+	if err := b.Verify(); err != nil {
+		return err
 	}
 
 	return nil

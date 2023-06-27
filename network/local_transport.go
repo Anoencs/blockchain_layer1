@@ -1,6 +1,7 @@
 package network
 
 import (
+	"bytes"
 	"fmt"
 	"sync"
 )
@@ -8,8 +9,8 @@ import (
 type LocalTransport struct {
 	addr      NetAddr
 	consumeCh chan RPC
-	peers     map[NetAddr]*LocalTransport
 	lock      sync.RWMutex
+	peers     map[NetAddr]*LocalTransport
 }
 
 func NewLocalTransport(addr NetAddr) *LocalTransport {
@@ -19,36 +20,47 @@ func NewLocalTransport(addr NetAddr) *LocalTransport {
 		peers:     make(map[NetAddr]*LocalTransport),
 	}
 }
-func (tr *LocalTransport) Addr() NetAddr {
-	return tr.addr
+
+func (t *LocalTransport) Consume() <-chan RPC {
+	return t.consumeCh
 }
 
-func (tr *LocalTransport) Consume() <-chan RPC {
-	return tr.consumeCh
-}
+func (t *LocalTransport) Connect(tr Transport) error {
+	trans := tr.(*LocalTransport)
+	t.lock.Lock()
+	defer t.lock.Unlock()
 
-func (tr *LocalTransport) Connect(trb Transport) error {
-	tr.lock.Lock()
-	defer tr.lock.Unlock()
+	t.peers[tr.Addr()] = trans
 
-	tr.peers[trb.Addr()] = trb.(*LocalTransport)
 	return nil
 }
 
-func (tr *LocalTransport) SendMessage(to NetAddr, payload []byte) error {
-	if tr.addr == to {
-		return fmt.Errorf("could not send message to yourself")
-	}
+func (t *LocalTransport) SendMessage(to NetAddr, payload []byte) error {
+	t.lock.RLock()
+	defer t.lock.RUnlock()
 
-	peer, ok := tr.peers[to]
+	peer, ok := t.peers[to]
 	if !ok {
-		return fmt.Errorf("%s: could mpt send message to %s", tr.addr, to)
+		return fmt.Errorf("%s: could not send message to %s", t.addr, to)
 	}
 
 	peer.consumeCh <- RPC{
-		From:    tr.addr,
-		Payload: payload,
+		From:    t.addr,
+		Payload: bytes.NewReader(payload),
 	}
 
 	return nil
+}
+
+func (t *LocalTransport) Broadcast(payload []byte) error {
+	for _, peer := range t.peers {
+		if err := t.SendMessage(peer.Addr(), payload); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (t *LocalTransport) Addr() NetAddr {
+	return t.addr
 }
